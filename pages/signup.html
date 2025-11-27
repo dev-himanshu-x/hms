@@ -1,75 +1,90 @@
-<div class="vh-100 w-100 d-flex justify-content-center align-items-center azad">
-    <div class="p-5 h-100 w-50">
-        <img src="assets/doctor-signup.png" height="690" width="700">
+<div class="p-5 vh-100 w-100 d-flex justify-content-center align-items-center azad" ng-controller="signup">
+    <div class="h-100 w-50 d-none d-lg-flex">
+        <img src="assets/doctor-signup.png" height="675" width="700">
     </div>
-    <div class="p-5 h-100 w-50 d-flex justify-content-center flex-column">
-        <h1>Sign Up</h1>
-        <p class="mb-5">Already have an account ? <span ui-sref="signin">Sign In</span></p>
-        <div class="d-flex w-100 mb-4 gap-4">
-            <div class="w-50">
-                <input type="text" placeholder="First Name" required name="first_name" class="form-control rounded-5">
+    <div class="h-100 w-50 d-flex justify-content-center flex-column">
+        <form class="vh-100 w-100 d-flex flex-column justify-content-center" ng-submit="submit()" id="form">
+            <h1>Sign Up</h1>
+            <p class="mb-4">Already have an account ? <span ui-sref="signin">Sign In</span></p>
+            <div class="d-flex w-100 mb-4 gap-4">
+                <div class="w-50">
+                    <input type="text" placeholder="First Name" required name="first_name"
+                        class="form-control rounded-5" pattern="[a-zA-Z]{2,20}">
+                </div>
+                <div class="w-50">
+                    <input type="text" placeholder="Last Name" name="last_name" class="form-control rounded-5"
+                        pattern="[a-zA-Z]{2,20}">
+                </div>
             </div>
-            <div class="w-50">
-                <input type="text" placeholder="Last Name" name="last_name" class="form-control rounded-5">
+            <div class="d-flex w-100 mb-4 gap-4">
+                <div class="w-50">
+                    <input type="text" placeholder="Email" required name="email" class="form-control rounded-5"
+                        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}">
+                </div>
+                <div class="w-50">
+                    <input type="date" name="dob" class="w-100 form-control rounded-5" ng-change="dobcheck()"
+                        ng-model="dob">
+                </div>
             </div>
-        </div>
-        <div class="d-flex w-100 mb-4 gap-4">
-            <div class="w-50">
-                <input type="text" placeholder="Email" required name="email" class="form-control rounded-5">
+            <div class="d-flex w-100 mb-4 gap-4">
+                <div class=" w-50">
+                    <input type="text" placeholder="Phone Number" required name="phone_no"
+                        class="form-control rounded-5" maxlength="10" minlength="10" pattern="[6789][0-9]{0,9}">
+                </div>
+                <div class="w-50">
+                    <input type="text" placeholder="Alternate Phone Number" required class="form-control rounded-5"
+                        maxlength="10" minlength="10" pattern="[6789][0-9]{0,9}">
+                </div>
             </div>
-            <div class="w-50">
-                <input type="date" name="dob" class="w-100 form-control rounded-5">
+            <div class="d-flex w-100 mb-4 gap-4">
+                <div class="w-50">
+                    <select name="gender" class="w-100 form-control rounded-5">
+                        <option value="">Gender</option>
+                        <option ng-repeat="gender in genders" value="gender.key">{{gender.name}}</option>
+                    </select>
+                </div>
+                <div class="w-50">
+                    <input type="file" required name="photo" class="form-control rounded-5 bg-none">
+                </div>
             </div>
-        </div>
-        <div class="d-flex w-100 mb-4 gap-4">
-            <div class=" w-50">
-                <input type="text" placeholder="Phone Number" required name="phone_no" class="form-control rounded-5">
+            <div class="d-flex w-100 mb-4 gap-4">
+                <div class="w-50">
+                    <input type="text" placeholder="Address" required name="address" class="form-control rounded-5"
+                        pattern="^(([A-Z])*(\d+)([A-Z])*)(-|\/|&)*(([A-Z])*(\d+)([A-Z])*)*((\/)*(([A-Z])*(\d+)([A-Z])*))*">
+                </div>
+                <div class="w-50">
+                    <select name="qualification" class="w-100 form-control rounded-5">
+                        <option value="">Qualification</option>
+                        <option ng-repeat="qual in qualification" value="qual.key">{{qual.name}}</option>
+                    </select>
+                </div>
             </div>
-            <div class="w-50">
-                <input type="text" placeholder="Alternate Phone Number" required name="alternate_phone_no" class="form-control rounded-5">
+            <div class="d-flex w-100 mb-4 gap-4">
+                <div class="w-50">
+                    <select name="specialization" class="w-100 form-control rounded-5">
+                        <option value="">Specialization</option>
+                        <option ng-repeat="spec in specialization" value="spec.key">{{spec.name}}</option>
+                    </select>
+                </div>
+                <div class="w-50">
+                    <input type="text" required name="experience" placeholder="Experience"
+                        class="form-control rounded-5" pattern="[0-9]{0,2}" minlength="1" maxlength="2">
+                </div>
             </div>
-        </div>
-        <div class="d-flex w-100 mb-4 gap-4">
-            <div class="w-50">
-                <select name="gender" class="w-100 form-control rounded-5">
-                    <option value="">Gender</option>
-                    <option></option>
-                </select>
+            <div class="d-flex w-100 mb-4 gap-4">
+                <div class="w-50">
+                    <input type="password" placeholder="Password" required class="form-control rounded-5"
+                        name="password" ng-model="password">
+                </div>
+                <div class="w-50">
+                    <input type="password" placeholder="Confirm Password" required class="form-control rounded-5"
+                        ng-model="confirm_password" name="confirm_password">
+                </div>
             </div>
-            <div class="w-50">
-                <input type="file" required name="photo" class="form-control rounded-5 bg-none">
-            </div>
-        </div>
-        <div class="d-flex w-100 mb-4 gap-4">
-            <div class="w-50">
-                <input type="text" placeholder="Address" required name="address" class="form-control rounded-5">
-            </div>
-            <div class="w-50">
-                <select name="qualification" class="w-100 form-control rounded-5">
-                    <option value="">Qualification</option>
-                    <option></option>
-                </select>
-            </div>
-        </div>
-        <div class="d-flex w-100 mb-4 gap-4">
-            <div class="w-50">
-                <select name="specialization" class="w-100 form-control rounded-5">
-                    <option value="">Specialization</option>
-                    <option></option>
-                </select>
-            </div>
-            <div class="w-50">
-                <input type="text" required name="experience" placeholder="Experience" class="form-control rounded-5">
-            </div>
-        </div>
-        <div class="d-flex w-100 mb-4 gap-4">
-            <div class="w-50">
-                <input type="password" placeholder="Password" required class="form-control rounded-5">
-            </div>
-            <div class="w-50">
-                <input type="password" placeholder="Confirm Password" required class="form-control rounded-5">
-            </div>
-        </div>
-        <div class="btn btn-primary w-100 rounded-5">Sign Up</div>
+            <button class="btn btn-primary w-100 rounded-5" type="submit">Sign Up</button>
+        </form>
     </div>
+</div>
+<div id="loaderDiv" loader>
+    <img src="assets/1486.gif" class="ajax-loader"/>
 </div>
