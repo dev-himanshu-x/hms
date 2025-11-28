@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 
 <head>
+
+    <title>Hospital Management System</title>
 
     <link rel="stylesheet" href="index.css">
 
@@ -27,6 +29,12 @@
 <body>
 
     <div ng-app="myapp">
+
+        <div loader>
+            <div id="loaderDiv" ng-if="person">
+                <img src="assets/1486.gif" class="ajax-loader" alt="loader">
+            </div>
+        </div>
 
         <ui-view></ui-view>
 
