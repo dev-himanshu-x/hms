@@ -1,0 +1,90 @@
+<div class="vh-100 w-100 d-flex azad flex-column container-fluid" ng-controller="land">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                            Dropdown
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid d-flex">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Book
+            Appointment</button>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Book Appointment (9:00 am to 5:00 pm)</h1>
+                    </div>
+                    <div class="modal-body">
+                        <form ng-submit="submit()" id="Appointment">
+                            <div class="w-100 mb-4">
+                                <select class="w-100 form-control">
+                                    <option value="">Specialization</option>
+                                    <option ng-repeat="spec in specialization">{{spec.name}}</option>
+                                </select>
+                            </div>
+                            <div class="w-100 mb-4">
+                                <select class="w-100 form-control" required name="doctor" ng-model="doctor">
+                                    <option value="">Doctor</option>
+                                    <option ng-repeat="doc in doctors" value="{{doc.id}}" >
+                                        {{doc.first_name}}
+                                        ({{doc.specializations}})
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="w-100 mb-4">
+                                <input type="date" class="w-100 form-control" ng-change="dobcheck()" ng-model="dob" name="dob">
+                            </div>
+                            <div class="w-100 mb-4">
+                                <input type="time" class="w-100 form-control" ng-model="time" name="time">
+                            </div>
+                            <div class="w-100 mb-3">
+                                <textarea type="text" placeholder="Explain problem" required class="form-control" name="reason_to_visit" pattern="[A-Za-z_ ]{1,50}" ng-model="reason_to_visit                                               "></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                    ng-click="clear()">Close</button>
+                                <button type="submit" class="btn btn-primary">Book</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
