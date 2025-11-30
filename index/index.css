@@ -32,3 +32,19 @@ select {
     margin-top: -32px;
     display: block;
 }
+
+#cards{
+    width: 300px;
+}
+
+#signin{
+    background-color: #2f94cb;
+}
+
+#singup{
+    background-color: #2f94cb;
+}
+
+#singup_{
+    background-color: #2f94cb;
+}

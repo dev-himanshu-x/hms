@@ -1,88 +1,86 @@
-<div class="vh-100 w-100 d-flex azad flex-column container-fluid" ng-controller="land">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Navbar</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                            Dropdown
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-                    </li>
-                </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-            </div>
+<div class="container-fluid" ng-controller="land">
+    <nav class="d-flex justify-content-between align-items-center flex-wrap border-bottom">
+        <div class="d-flex align-items-start">
+            <p><img src="assets/logo.png" height="100" width="100" alt="image"></p>
+        </div>
+        <div class="d-flex align-items-center justify-content-center flex-wrap gap-4 px-4">
+            <a class="nav-link text-muted fw-semibold" ui-sref="medical">Appointments</a>
+            <a class="nav-link text-muted fw-semibold" ui-sref="profile">Profile</a>
+            <a class="nav-link text-muted fw-semibold" ng-click="logout()">Log Out</a>
         </div>
     </nav>
-    <div class="container-fluid d-flex">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Book
-            Appointment</button>
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-            data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Book Appointment (9:00 am to 5:00 pm)</h1>
-                    </div>
-                    <div class="modal-body">
-                        <form ng-submit="submit()" id="Appointment">
-                            <div class="w-100 mb-4">
-                                <select class="w-100 form-control">
-                                    <option value="">Specialization</option>
-                                    <option ng-repeat="spec in specialization">{{spec.name}}</option>
-                                </select>
-                            </div>
-                            <div class="w-100 mb-4">
-                                <select class="w-100 form-control" required name="doctor" ng-model="doctor">
-                                    <option value="">Doctor</option>
-                                    <option ng-repeat="doc in doctors" value="{{doc.id}}" >
-                                        {{doc.first_name}}
-                                        ({{doc.specializations}})
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="w-100 mb-4">
-                                <input type="date" class="w-100 form-control" ng-change="dobcheck()" ng-model="dob" name="dob">
-                            </div>
-                            <div class="w-100 mb-4">
-                                <input type="time" class="w-100 form-control" ng-model="time" name="time">
-                            </div>
-                            <div class="w-100 mb-3">
-                                <textarea type="text" placeholder="Explain problem" required class="form-control" name="reason_to_visit" pattern="[A-Za-z_ ]{1,50}" ng-model="reason_to_visit                                               "></textarea>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                                    ng-click="clear()">Close</button>
-                                <button type="submit" class="btn btn-primary">Book</button>
-                            </div>
-                        </form>
-                    </div>
+    <div class="d-flex align-items-center w-100 justify-content-center">
+        <div class="d-flex flex-column justify-content-center p-3 w-50">
+            <h1 class="display-3 text-dark fw-bold mb-4">
+                Total Care , Each Day Each Minute , Each Second , Even Every Moment.
+            </h1>
+            <p class="text-muted fw-medium">Living in the moment means letting go of the past and not waiting for the
+                future. It means living your life consciously, aware that each moment you breathe is a gift.”—Oprah
+                Winfrey</p>
+            <button type="button" class="btn btn-primary w-50 fw-bold mt-3" data-bs-toggle="modal"
+                data-bs-target="#exampleModal">Book Appointment</button>
+        </div>
+        <div class="d-flex justify-content-center align-items-center w-50"><img src="assets/online.png" alt="online"
+                height="600" width="600"></div>
+    </div>
+    <div class="d-flex align-items-center w-100 justify-content-center">
+        <div class="d-flex justify-content-center align-items-center w-50"><img src="assets/couple.jpg" alt="online"
+                height="600" width="600"></div>
+        <div class="d-flex flex-column justify-content-center p-3 w-50">
+            <h1 class="display-6 text-dark fw-medium mb-4">
+                About Us
+            </h1>
+            <span class="text-muted fw-medium">Welcome to our new website. We encourage you to find out more about the
+                values and vision that guides us, the services and programs we offer, the indicators that ensure our
+                continued accountability and transparency, and the news and events that matter most to you.India
+                Hospital has a proud tradition of care. For Last so many years, India Hospital has cared for the people
+                of Lucknow, surrounding communities, and beyond, being a significant player within the District.
+                Residing in the heart of a beautiful cottage country on the shores of the Gomti River, we offer
+                healthcare not only to our community residents but to the many visitors who frequent our beautiful area
+                year round.</span>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Book Appointment (9:00 am to 5:00 pm)</h1>
+                </div>
+                <div class="modal-body">
+                    <form ng-submit="submit()" id="Appointment">
+                        <div class="w-100 mb-4">
+                            <select class="w-100 form-control" required>
+                                <option value="">Specialization</option>
+                                <option ng-repeat="spec in specialization">{{spec.name}}</option>
+                            </select>
+                        </div>
+                        <div class="w-100 mb-4">
+                            <select class="w-100 form-control" required name="doctor" ng-model="doctor">
+                                <option value="">Doctor</option>
+                                <option ng-repeat="doc in doctors" value="{{doc.id}}">
+                                    {{doc.first_name}}
+                                    ({{doc.specializations}})
+                                </option>
+                            </select>
+                        </div>
+                        <div class="w-100 mb-4">
+                            <input type="date" class="w-100 form-control" ng-change="dobcheck()" ng-model="dob"
+                                name="dob">
+                        </div>
+                        <div class="w-100 mb-4">
+                            <input type="time" class="w-100 form-control" ng-model="time" name="time">
+                        </div>
+                        <div class="w-100 mb-3">
+                            <textarea type="text" placeholder="Explain problem" required class="form-control"
+                                name="reason_to_visit" pattern="[A-Za-z_ ]{1,50}"
+                                ng-model="reason_to_visit"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                ng-click="clear()">Close</button>
+                            <button type="submit" class="btn btn-primary">Book</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

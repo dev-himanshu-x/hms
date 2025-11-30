@@ -1,8 +1,8 @@
 <div class="p-5 vh-100 w-100 d-flex justify-content-center align-items-center azad" ng-controller="signup">
-    <div class="h-100 w-50 d-none d-lg-flex">
-        <img src="assets/doctor-signup.png" height="675" width="700" alt="image">
+    <div class="h-100 d-none d-lg-flex align-items-center justify-content-center">
+        <img src="assets/3.jpg" height="690" width="800" alt="image">
     </div>
-    <div class="h-100 w-50 d-flex justify-content-center flex-column">
+    <div class="p-5 h-100 d-flex justify-content-center flex-column">
         <form class="vh-100 w-100 d-flex flex-column justify-content-center" ng-submit="submit()" id="form">
             <h1>Sign Up</h1>
             <p class="mb-4">Already have an account ? <span ui-sref="signin">Sign In</span></p>
@@ -82,7 +82,7 @@
                         pattern="(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,16}">
                 </div>
             </div>
-            <button class="btn btn-primary w-100 rounded-5" type="submit">Sign Up</button>
+            <button class="btn btn-primary w-100 rounded-5 border-0 fw-bold" id="singup" type="submit">Sign Up</button>
         </form>
     </div>
 </div>

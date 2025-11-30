@@ -1,41 +1,7 @@
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Book Appointment</button>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Book Appointment</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="w-100 mb-4 mt-2">
-                    <select class="w-100 form-control" required>
-                        <option value="">Medical Field</option>
-                        <option ng-repeat="gender in genders" value="{{gender.id}}">{{gender.name}}</option>
-                    </select>
-                </div>
-                <div class="w-100 mb-4">
-                    <select class="w-100 form-control" required>
-                        <option value="">Doctor</option>
-                        <option ng-repeat="gender in genders" value="{{gender.id}}">{{gender.name}}</option>
-                    </select>
-                </div>
-                <div class="w-100 mb-4">
-                    <select  class="w-100 form-control" required>
-                        <option value="">Timing</option>
-                        <option ng-repeat="gender in genders" value="{{gender.id}}">{{gender.name}}</option>
-                    </select>
-                </div>
-                <div class="w-100 mb-3">
-                    <textarea type="text" placeholder="Explain problem" required class="form-control"
-                        pattern="[A-Za-z_ ]{1,50}"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary fw-bold">Book</button>
-            </div>
+<div data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+            <img src="assets/bar.png" alt="bar" height="30" width="30" class="d-none">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <a class="nav-link text-muted fw-semibold">Appointments</a>
+            <a class="nav-link text-muted fw-semibold">Profile</a>
+            <a class="nav-link text-muted fw-semibold">Log Out</a>
         </div>
-    </div>
-</div>

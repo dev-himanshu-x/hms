@@ -1,11 +1,11 @@
 <div class="vh-100 w-100 d-flex justify-content-center align-items-center azad" ng-controller="signin">
-    <div class="p-5 h-100 w-50 d-none d-lg-flex">
-        <img src="assets/doctor-signup.png" height="690" width="700" alt="image">
+    <div class="p-5 h-100 d-none d-lg-flex justify-content-center align-items-center">
+        <img src="assets/3.jpg" height="690" width="800" alt="image">
     </div>
-    <div class="p-5 h-100 w-50 d-flex justify-content-center flex-column">
+    <div class="p-5 h-100 d-flex justify-content-center flex-column">
         <form ng-submit="submit()">
             <h1 class="mb-1">Sign In</h1>
-            <p class="mb-5">Don't have an account ? <span ui-sref="signup">Doctor Sign Up / </span><span
+            <p class="mb-4 fs-7">Don't have an account ? <span ui-sref="signup">Doctor Sign Up / </span><span
                     ui-sref="signup_">Patient Sign Up</span></p>
             <div class="w-100 mb-4">
                 <input type="text" placeholder="Email" required ng-model="email" class="form-control rounded-5"
@@ -15,7 +15,7 @@
                 <input type="password" placeholder="Password" required ng-model="password"
                     class="form-control rounded-5" pattern="(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,16}">
             </div>
-            <button class="btn btn-primary w-100 rounded-5" type="submit">Sign In</button>
+            <button class="btn btn-primary w-100 rounded-5 border-0 fw-bold" id="signin" type="submit">Sign In</button>
         </form>
     </div>
 </div>

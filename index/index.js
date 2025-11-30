@@ -24,7 +24,7 @@ app.factory('httpInterceptor', function ($q, $rootScope, $log) {
 })
 app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
     $httpProvider.interceptors.push('httpInterceptor');
-    $urlRouterProvider.otherwise('/signin')
+    $urlRouterProvider.otherwise('/')
     $stateProvider
         .state('signup', {
             url: '/signup',
@@ -45,6 +45,18 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
         .state('dummy', {
             url: '/dummy',
             templateUrl: 'dummy.html'
+        })
+        .state('medical', {
+            url: '/medical',
+            templateUrl: 'pages/medical_history.html'
+        })
+        .state('profile', {
+            url: '/profile',
+            templateUrl: 'pages/patient_profile.html'
+        })
+        .state('appointment', {
+            url: '/appointment',
+            templateUrl: 'pages/appointment_approve.html'
         })
     $httpProvider.interceptors.push(function () {
         return {
@@ -235,12 +247,12 @@ app.controller('land', function ($scope, $http, $state) {
             reason_to_visit: reason_to_visit
         }
         $http.post(url + "patient/bookAppointment/", detail, { withCredentials: true }).then(function (response) {
-            console.log(response)
+            document.getElementById("Appointment").reset()
             Swal.fire({
                 title: "Success",
                 icon: "success",
                 text: response.data.msg
-            });
+            })
         }).catch(function (error) {
             Swal.fire({
                 title: "Error",
@@ -252,4 +264,40 @@ app.controller('land', function ($scope, $http, $state) {
     $scope.clear = function () {
         document.getElementById("Appointment").reset()
     }
+})
+app.controller('medical', function ($scope, $http, $state) {
+    $http.get(url + "patient/bookAppointment/").then(function (response) {
+        var data = response.data
+        $scope.appointments = data
+        console.log(data)
+    })
+})
+app.controller('appointmen', function ($scope, $http, $state) {
+    $scope.appointments=[]
+    $http.get(url + "reception/appointments_data/").then(function (response) {
+        var data = response.data
+        function find(details, id) {
+            return details.find(detail => detail.id === id)
+        }
+        for (let i = 0; i < data.appointment_data.length; i++) {
+            var appointment = data.appointment_data[i]
+            var patient_id = appointment.patient_id
+            var doctor_id = appointment.doctor_id
+            var patient_details = find(data.patient_data, patient_id)
+            var doctor_details = find(data.doctor_data, doctor_id)
+            var new_appointment = {
+                date: appointment.appointment_date,
+                time: appointment.appointment_time,
+                reason: appointment.reason_to_vist,
+                fname: patient_details.first_name,
+                lname: patient_details.last_name,
+                history: patient_details.medical_history,
+                doc_fname: doctor_details.first_name,
+                doc_lname: doctor_details.last_name,
+                specialization: doctor_details.specialization_name,
+                status: appointment.status
+            }
+            $scope.appointments.push(new_appointment)
+        }
+    })
 })
