@@ -1,38 +1,38 @@
-var app = angular.module('myapp', ['ui.router']);
-var url = "https://10.21.99.62:8001/";
-app.factory('httpInterceptor', function ($q, $rootScope, $log) {
+var app = angular.module('myapp', ['ui.router'])
+var url = "https://10.21.99.181:8001/"
+app.factory('httpInterceptor', function ($rootScope) {
     var numLoadings = 0
     return {
         request: function (config) {
             numLoadings++
-            $rootScope.$broadcast("loader_show");
+            $rootScope.$broadcast("loader_show")
             return config
         },
         response: function (response) {
             if ((--numLoadings) === 0) {
-                $rootScope.$broadcast("loader_hide");
+                $rootScope.$broadcast("loader_hide")
             }
             return response
         },
         responseError: function (response) {
             if ((--numLoadings) === 0) {
-                $rootScope.$broadcast("loader_hide");
+                $rootScope.$broadcast("loader_hide")
             }
             return
         }
     }
 })
 app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
-    $httpProvider.interceptors.push('httpInterceptor');
+    $httpProvider.interceptors.push('httpInterceptor')
     $urlRouterProvider.otherwise('/')
     $stateProvider
         .state('signup', {
             url: '/signup',
-            templateUrl: 'pages/signup.html'
+            templateUrl: 'pages/signup_doctor.html'
         })
         .state('signup_', {
             url: '/signup_',
-            templateUrl: 'pages/register.html'
+            templateUrl: 'pages/signup_patient.html'
         })
         .state('signin', {
             url: '/signin',
@@ -40,11 +40,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
         })
         .state('/', {
             url: '/',
-            templateUrl: 'pages/land.html'
-        })
-        .state('dummy', {
-            url: '/dummy',
-            templateUrl: 'dummy.html'
+            templateUrl: 'pages/home.html'
         })
         .state('medical', {
             url: '/medical',
@@ -52,11 +48,11 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
         })
         .state('profile', {
             url: '/profile',
-            templateUrl: 'pages/patient_profile.html'
+            templateUrl: 'pages/profile.html'
         })
         .state('appointment', {
             url: '/appointment',
-            templateUrl: 'pages/appointment_approve.html'
+            templateUrl: 'pages/reception_appointment.html'
         })
     $httpProvider.interceptors.push(function () {
         return {
@@ -78,6 +74,14 @@ app.directive("loader", function ($rootScope) {
     }
 })
 app.controller('signup', function ($scope, $http, $state) {
+    $scope.input_type = 'password'
+    $scope.toggle = function () {
+        if ($scope.input_type == 'password') {
+            $scope.input_type = 'text'
+        } else {
+            $scope.input_type = 'password'
+        }
+    }
     $http.get(url + "auth/dropdowns/").then(function (response) {
         var data = response.data
         $scope.genders = data.genders
@@ -131,6 +135,14 @@ app.controller('signup', function ($scope, $http, $state) {
     }
 })
 app.controller('signupctrl', function ($scope, $http, $state) {
+    $scope.input_type = 'password'
+    $scope.toggle = function () {
+        if ($scope.input_type == 'password') {
+            $scope.input_type = 'text'
+        } else {
+            $scope.input_type = 'password'
+        }
+    }
     $http.get(url + "auth/dropdowns/").then(function (response) {
         var data = response.data
         $scope.genders = data.genders
@@ -189,36 +201,52 @@ app.controller('signin', function ($scope, $http, $state) {
             password: $scope.password
         }
         $http.post(url + "auth/login/", data, { withCredentials: true }).then(function (response) {
-            $state.go('/');
+            var data = response.data
+            if (data.role == "Receptionist") {
+                $state.go('appointment')
+            }
+            else {
+                $state.go('/')
+            }
             Swal.fire({
                 title: "Success",
                 icon: "success",
                 text: response.data.msg
-            });
+            })
         }).catch(function (error) {
             Swal.fire({
                 title: "Error",
                 icon: "error",
                 text: error.data.error
             })
-        });
+        })
+    }
+    $scope.input_type = 'password'
+    $scope.toggle = function () {
+        if ($scope.input_type == 'password') {
+            $scope.input_type = 'text'
+        } else {
+            $scope.input_type = 'password'
+        }
     }
 })
-app.controller('land', function ($scope, $http, $state) {
+
+app.controller('home', function ($scope, $http, $state) {
+    $scope.selectedSpecialization = ""
     $scope.dobcheck = function () {
-        var dob = $scope.dob;
-        var today = new Date();
-        today.setHours(0, 0, 0, 0);
-        if (dob < today) {
+        var dob = $scope.dob
+        var today = new Date()
+        today.setHours(0, 0, 0, 0)
+        if (new Date(dob) < today) {
             Swal.fire({
                 title: "Error",
                 icon: "error",
                 text: "Invalid Date"
-            });
-            return false;
+            })
+            return false
         }
         else {
-            return true;
+            return true
         }
     }
     $http.get(url + "auth/dropdowns/").then(function (response) {
@@ -236,17 +264,15 @@ app.controller('land', function ($scope, $http, $state) {
         })
     })
     $scope.submit = function () {
-        var doctor = $scope.doctor
         var date = $scope.dob.toLocaleDateString("sv-sv")
         var time = $scope.time.toLocaleTimeString()
-        var reason_to_visit = $scope.reason_to_visit
         var detail = {
-            doctor: doctor,
+            doctor: $scope.doctor,
             date: date,
             time: time,
-            reason_to_visit: reason_to_visit
+            reason_to_visit: $scope.reason_to_visit
         }
-        $http.post(url + "patient/bookAppointment/", detail, { withCredentials: true }).then(function (response) {
+        $http.post(url + "patient/book_appointment/", detail, { withCredentials: true }).then(function (response) {
             document.getElementById("Appointment").reset()
             Swal.fire({
                 title: "Success",
@@ -257,14 +283,16 @@ app.controller('land', function ($scope, $http, $state) {
             Swal.fire({
                 title: "Error",
                 icon: "error",
-                text: error.data.error
+                text: error.data.error || "An unknown error occurred."
             })
         })
     }
     $scope.clear = function () {
         document.getElementById("Appointment").reset()
+        $scope.selectedSpecialization = ""
     }
 })
+
 app.controller('medical', function ($scope, $http, $state) {
     $http.get(url + "patient/bookAppointment/").then(function (response) {
         var data = response.data
@@ -273,31 +301,56 @@ app.controller('medical', function ($scope, $http, $state) {
     })
 })
 app.controller('appointmen', function ($scope, $http, $state) {
-    $scope.appointments=[]
-    $http.get(url + "reception/appointments_data/").then(function (response) {
-        var data = response.data
-        function find(details, id) {
-            return details.find(detail => detail.id === id)
-        }
-        for (let i = 0; i < data.appointment_data.length; i++) {
-            var appointment = data.appointment_data[i]
-            var patient_id = appointment.patient_id
-            var doctor_id = appointment.doctor_id
-            var patient_details = find(data.patient_data, patient_id)
-            var doctor_details = find(data.doctor_data, doctor_id)
-            var new_appointment = {
-                date: appointment.appointment_date,
-                time: appointment.appointment_time,
-                reason: appointment.reason_to_vist,
-                fname: patient_details.first_name,
-                lname: patient_details.last_name,
-                history: patient_details.medical_history,
-                doc_fname: doctor_details.first_name,
-                doc_lname: doctor_details.last_name,
-                specialization: doctor_details.specialization_name,
-                status: appointment.status
+    $scope.appointments = []
+    function show() {
+        $http.get(url + "reception/appointments_data/").then(function (response) {
+            var data = response.data
+            console.log(data)
+            function find(details, id) {
+                return details.find(detail => detail.id === id)
             }
-            $scope.appointments.push(new_appointment)
+            for (let i = 0; i < data.appointment_data.length; i++) {
+                var appointment = data.appointment_data[i]
+                var patient_id = appointment.patient_id
+                var doctor_id = appointment.doctor_id
+                var patient_details = find(data.patient_data, patient_id)
+                var doctor_details = find(data.doctor_data, doctor_id)
+                var new_appointment = {
+                    date: appointment.appointment_date,
+                    time: appointment.appointment_time,
+                    id: appointment.id,
+                    reason: appointment.reason_to_vist,
+                    fname: patient_details.first_name,
+                    lname: patient_details.last_name,
+                    history: patient_details.medical_history,
+                    doc_fname: doctor_details.first_name,
+                    doc_lname: doctor_details.last_name,
+                    specialization: doctor_details.specialization_name,
+                    status: appointment.status
+                }
+                $scope.appointments.push(new_appointment)
+            }
+        })
+    }
+    $scope.approve = function (id) {
+        Boolean = true
+        var value = {
+            accepted: Boolean
         }
-    })
+        $http.put(url + "reception/update_appointment", value, { params: { 'id': id } }).then(function (response) {
+            Swal.fire({
+                title: "Success",
+                icon: "success",
+                text: response.data.msg
+            })
+            show()
+        }).catch(function (error) {
+            Swal.fire({
+                title: "Error",
+                icon: "error",
+                text: error.data.error || "An unknown error occurred."
+            })
+        })
+    }
+    show()
 })
