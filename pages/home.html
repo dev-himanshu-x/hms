@@ -2,7 +2,7 @@
     <nav class="navbar navbar-expand-md border-bottom">
         <div class="container-fluid d-flex justify-content-between align-items-center flex-wrap">
             <a class="navbar-brand p-0" href="#">
-                <img src="assets/logo.png" height="100" width="100" alt="App Logo">
+                <img src="assets/logo.png" height="50" width="50" alt="App Logo">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavContent"
                 aria-controls="navbarNavContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -11,28 +11,35 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarNavContent">
                 <ul class="navbar-nav d-flex align-items-center flex-row gap-4 px-4">
                     <li class="nav-item">
-                        <a class="nav-link text-muted fw-semibold" ui-sref="medical">Appointments</a>
+                        <a class="nav-link text-muted fw-semibold" ui-sref="medical" ng-if="user">Appointments</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-muted fw-semibold" ui-sref="profile">Profile</a>
+                        <a class="nav-link text-muted fw-semibold" ui-sref="profile" ng-if="user">Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-muted fw-semibold" ng-click="logout()">Log Out</a>
+                        <a class="nav-link text-danger fw-semibold" ng-click="logout()" ng-if="user">Sign Out</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-primary fw-semibold" ui-sref="signin" ng-if="!user">Sign In</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-    <div class="d-flex align-items-center w-100 justify-content-center">
-        <div class="d-flex flex-column justify-content-center">
+    <div class="d-flex w-100 py-4">
+        <div class="d-flex flex-column py-5">
             <p class="display-3 text-dark fw-bold mb-4">
                 Total Care , Each Day Each Minute , Each Second , Even Every Moment.
             </p>
+            <p class="text-muted fw-medium">An Atheist believes that a hospital should be built instead of a church. An
+                atheist believes that deed must be done instead of prayer said. An atheist strives for involvement in
+                life and not escape into death. He wants disease conquered, poverty vanished, war eliminated.
+                </p>
             <p class="text-muted fw-medium">Living in the moment means letting go of the past and not waiting for the
                 future. It means living your life consciously, aware that each moment you breathe is a gift.”—Oprah
                 Winfrey</p>
             <button type="button" class="btn btn-primary w-50 fw-bold mt-3" data-bs-toggle="modal"
-                data-bs-target="#exampleModal">Book Appointment</button>
+                data-bs-target="#exampleModal" ng-if="user">Book Appointment</button>
         </div>
         <div class="d-none d-lg-flex justify-content-center align-items-center"><img src="assets/online.png"
                 alt="online" height="600" width="600"></div>
@@ -76,7 +83,7 @@
                                 <option ng-repeat="doc in doctors | filter: {specializations: selectedSpecialization}"
                                     value="{{doc.id}}">
                                     {{doc.first_name}}
-                                    ({{doc.specializations}})
+                                    {{doc.last_name}}
                                 </option>
                             </select>
                         </div>
@@ -95,7 +102,7 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
                                 ng-click="clear()">Close</button>
-                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Book</button>
+                            <button type="submit" class="btn btn-primary">Book</button>
                         </div>
                     </form>
                 </div>

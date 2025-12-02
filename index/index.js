@@ -18,7 +18,7 @@ app.factory('httpInterceptor', function ($rootScope) {
             if ((--numLoadings) === 0) {
                 $rootScope.$broadcast("loader_hide")
             }
-            return
+            return response
         }
     }
 })
@@ -110,7 +110,7 @@ app.controller('signup', function ($scope, $http, $state) {
         if (password == confirm) {
             var form = document.getElementById("form")
             var data = new FormData(form)
-            $http.post(url + "auth/register", data, { headers: { 'Content-Type': undefined }, params: { 'role': 'doctor' } }).then(function (response) {
+            $http.post(url + "auth/register", data, { headers: { 'Content-Type': undefined }, params: { 'role': 'doctor' }, withCredentials: true }).then(function (response) {
                 $state.go('/');
                 Swal.fire({
                     title: "Success",
@@ -170,7 +170,7 @@ app.controller('signupctrl', function ($scope, $http, $state) {
         if (password == confirm) {
             var form = document.getElementById("form")
             var data = new FormData(form)
-            $http.post(url + "auth/register", data, { headers: { 'Content-Type': undefined }, params: { 'role': 'patient' } }).then(function (response) {
+            $http.post(url + "auth/register", data, { headers: { 'Content-Type': undefined }, params: { 'role': 'patient' }, withCredentials: true }).then(function (response) {
                 $state.go('/');
                 Swal.fire({
                     title: "Success",
@@ -202,10 +202,10 @@ app.controller('signin', function ($scope, $http, $state) {
         }
         $http.post(url + "auth/login/", data, { withCredentials: true }).then(function (response) {
             var data = response.data
-            if (data.role == "Receptionist") {
+            if ((data.role == "Receptionist") || (data.role=="Doctor")) {
                 $state.go('appointment')
             }
-            else {
+            else if(data.role == "Patient") {
                 $state.go('/')
             }
             Swal.fire({
@@ -232,6 +232,47 @@ app.controller('signin', function ($scope, $http, $state) {
 })
 
 app.controller('home', function ($scope, $http, $state) {
+    $scope.logout = function () {
+        Swal.fire({
+            title: 'Do you want to logout ?',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            denyButtonText: 'No',
+            customClass: {
+                actions: 'my-actions',
+                cancelButton: 'order-1 right-gap',
+                confirmButton: 'order-2 left-gap',
+                denyButton: 'order-3',
+            },
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $http.delete(url + "auth/logout/").then(function (response) {
+                    $state.go("signin")
+                    Swal.fire({
+                        title: "Success",
+                        icon: "success",
+                        text: response.data.msg
+                    })
+                }).catch(function (error) {
+                    Swal.fire({
+                        title: "Error",
+                        icon: "error",
+                        text: error.data.error
+                    })
+                })
+            }
+        })
+    }
+    $scope.user = false
+    $http.get(url + "auth/profile/").then(function (response) {
+        var profile = response.data.role
+        if ((profile == "Patient") || (profile == "Doctor")) {
+            $scope.user = true
+        }
+        else {
+            $scope.user = false
+        }
+    })
     $scope.selectedSpecialization = ""
     $scope.dobcheck = function () {
         var dob = $scope.dob
@@ -294,50 +335,93 @@ app.controller('home', function ($scope, $http, $state) {
 })
 
 app.controller('medical', function ($scope, $http, $state) {
-    $http.get(url + "patient/bookAppointment/").then(function (response) {
+    $http.get(url + "patient/book_appointment/").then(function (response) {
         var data = response.data
         $scope.appointments = data
-        console.log(data)
     })
+    $scope.logout = function () {
+        Swal.fire({
+            title: 'Do you want to logout ?',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            denyButtonText: 'No',
+            customClass: {
+                actions: 'my-actions',
+                cancelButton: 'order-1 right-gap',
+                confirmButton: 'order-2 left-gap',
+                denyButton: 'order-3',
+            },
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $http.delete(url + "auth/logout/").then(function (response) {
+                    $state.go("signin")
+                    Swal.fire({
+                        title: "Success",
+                        icon: "success",
+                        text: response.data.msg
+                    })
+                }).catch(function (error) {
+                    Swal.fire({
+                        title: "Error",
+                        icon: "error",
+                        text: error.data.error
+                    })
+                })
+            }
+        })
+    }
 })
 app.controller('appointmen', function ($scope, $http, $state) {
+    $scope.logout = function () {
+        Swal.fire({
+            title: 'Do you want to logout ?',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            denyButtonText: 'No',
+            customClass: {
+                actions: 'my-actions',
+                cancelButton: 'order-1 right-gap',
+                confirmButton: 'order-2 left-gap',
+                denyButton: 'order-3',
+            },
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $http.delete(url + "auth/logout/").then(function (response) {
+                    $state.go("signin")
+                    Swal.fire({
+                        title: "Success",
+                        icon: "success",
+                        text: response.data.msg
+                    })
+                }).catch(function (error) {
+                    Swal.fire({
+                        title: "Error",
+                        icon: "error",
+                        text: error.data.error
+                    })
+                })
+            }
+        })
+    }
+    $http.get(url + "auth/profile/").then(function (response) {
+        var profile = response.data.role
+        $scope.user=profile
+        console.log(profile)
+    })
     $scope.appointments = []
     function show() {
         $http.get(url + "reception/appointments_data/").then(function (response) {
             var data = response.data
-            console.log(data)
-            function find(details, id) {
-                return details.find(detail => detail.id === id)
-            }
-            for (let i = 0; i < data.appointment_data.length; i++) {
-                var appointment = data.appointment_data[i]
-                var patient_id = appointment.patient_id
-                var doctor_id = appointment.doctor_id
-                var patient_details = find(data.patient_data, patient_id)
-                var doctor_details = find(data.doctor_data, doctor_id)
-                var new_appointment = {
-                    date: appointment.appointment_date,
-                    time: appointment.appointment_time,
-                    id: appointment.id,
-                    reason: appointment.reason_to_vist,
-                    fname: patient_details.first_name,
-                    lname: patient_details.last_name,
-                    history: patient_details.medical_history,
-                    doc_fname: doctor_details.first_name,
-                    doc_lname: doctor_details.last_name,
-                    specialization: doctor_details.specialization_name,
-                    status: appointment.status
-                }
-                $scope.appointments.push(new_appointment)
-            }
+            var appointment=data.appointment_data
+            $scope.appointments=appointment
         })
     }
     $scope.approve = function (id) {
-        Boolean = true
         var value = {
-            accepted: Boolean
+            id:id,
+            accepted: true
         }
-        $http.put(url + "reception/update_appointment", value, { params: { 'id': id } }).then(function (response) {
+        $http.put(url + "reception/update_appointment", value).then(function (response) {
             Swal.fire({
                 title: "Success",
                 icon: "success",
@@ -352,5 +436,80 @@ app.controller('appointmen', function ($scope, $http, $state) {
             })
         })
     }
+    $scope.reject=function(id){
+        var reason=document.getElementById("reason").value
+        var value = {
+            accepted: false,
+            reason_for_cancel:reason
+        }
+        $http.put(url + "reception/update_appointment", value, { params: { 'id': id } }).then(function (response) {
+            Swal.fire({
+                title: "Success",
+                icon: "success",
+                text: response.data.msg
+            })
+            document.getElementById("rejectModal").reset()
+            show()
+        }).catch(function (error) {
+            Swal.fire({
+                title: "Error",
+                icon: "error",
+                text: error.data.error || "An unknown error occurred."
+            })
+        })
+    }
+    $scope.clear = function () {
+        document.getElementById("rejectModal").reset()
+    }
     show()
+})
+app.controller('profile', function ($scope, $http, $state) {
+    $http.get(url + "auth/profile/").then(function (response) {
+        var profile = response.data
+        $scope.address = profile.address
+        $scope.dob = profile.birth_date
+        $scope.blood = profile.blood_group
+        $scope.email = profile.email
+        $scope.fname = profile.first_name
+        $scope.lname = profile.last_name
+        $scope.gender = profile.gender
+        $scope.height = profile.height
+        $scope.weight = profile.weight
+        $scope.history = profile.medical_history
+        $scope.phone = profile.phone_no
+        $scope.qua = profile.qualifications
+        $scope.spec = profile.specialization
+        $scope.exp = profile.experience
+    })
+    $scope.logout = function () {
+        Swal.fire({
+            title: 'Do you want to logout ?',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            denyButtonText: 'No',
+            customClass: {
+                actions: 'my-actions',
+                cancelButton: 'order-1 right-gap',
+                confirmButton: 'order-2 left-gap',
+                denyButton: 'order-3',
+            },
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $http.delete(url + "auth/logout/").then(function (response) {
+                    $state.go("signin")
+                    Swal.fire({
+                        title: "Success",
+                        icon: "success",
+                        text: response.data.msg
+                    })
+                }).catch(function (error) {
+                    Swal.fire({
+                        title: "Error",
+                        icon: "error",
+                        text: error.data.error
+                    })
+                })
+            }
+        })
+    }
 })

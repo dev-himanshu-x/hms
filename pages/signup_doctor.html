@@ -73,7 +73,7 @@
             </div>
             <div class="d-flex w-100 gap-4">
                 <div class="w-50 mb-4 form-control rounded-5 d-flex">
-                    <input ng-attr-type="{{input_type}}" type="password" placeholder="Password" required
+                    <input ng-attr-type="{{input_type}}" type="password" name="password" placeholder="Password" required
                         ng-model="password" pattern="(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,16}">
                     <div ng-click="toggle()">
                         <span ng-if="input_type == 'password'"><i class="ri-eye-off-line"></i></span>
