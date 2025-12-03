@@ -1,6 +1,6 @@
 var app = angular.module('myapp', ['ui.router'])
 var url = "https://10.21.99.181:8001/"
-app.factory('httpInterceptor', function ($rootScope) {
+app.factory('httpInterceptor', function ($rootScope, $q) {
     var numLoadings = 0
     return {
         request: function (config) {
@@ -12,13 +12,25 @@ app.factory('httpInterceptor', function ($rootScope) {
             if ((--numLoadings) === 0) {
                 $rootScope.$broadcast("loader_hide")
             }
+            if (response.config.method !== 'GET' && response.data && response.data.msg) {
+                Swal.fire({
+                    title: "Success",
+                    icon: "success",
+                    text: response.data.msg
+                })
+            }
             return response
         },
         responseError: function (response) {
             if ((--numLoadings) === 0) {
                 $rootScope.$broadcast("loader_hide")
             }
-            return response
+            Swal.fire({
+                title: "Error",
+                icon: "error",
+                text: response.data && response.data.error ? response.data.error : "An unexpected error occurred."
+            })
+            return $q.reject(response)
         }
     }
 })
@@ -112,18 +124,7 @@ app.controller('signup', function ($scope, $http, $state) {
             var data = new FormData(form)
             $http.post(url + "auth/register", data, { headers: { 'Content-Type': undefined }, params: { 'role': 'doctor' }, withCredentials: true }).then(function (response) {
                 $state.go('/');
-                Swal.fire({
-                    title: "Success",
-                    icon: "success",
-                    text: response.data.msg
-                });
-            }).catch(function (error) {
-                Swal.fire({
-                    title: "Error",
-                    icon: "error",
-                    text: error.data.error
-                })
-            });
+            })
         }
         else {
             Swal.fire({
@@ -134,6 +135,7 @@ app.controller('signup', function ($scope, $http, $state) {
         }
     }
 })
+
 app.controller('signupctrl', function ($scope, $http, $state) {
     $scope.input_type = 'password'
     $scope.toggle = function () {
@@ -172,18 +174,7 @@ app.controller('signupctrl', function ($scope, $http, $state) {
             var data = new FormData(form)
             $http.post(url + "auth/register", data, { headers: { 'Content-Type': undefined }, params: { 'role': 'patient' }, withCredentials: true }).then(function (response) {
                 $state.go('/');
-                Swal.fire({
-                    title: "Success",
-                    icon: "success",
-                    text: response.data.msg
-                });
-            }).catch(function (error) {
-                Swal.fire({
-                    title: "Error",
-                    icon: "error",
-                    text: error.data.error
-                })
-            });
+            })
         }
         else {
             Swal.fire({
@@ -194,6 +185,7 @@ app.controller('signupctrl', function ($scope, $http, $state) {
         }
     }
 })
+
 app.controller('signin', function ($scope, $http, $state) {
     $scope.submit = function () {
         var data = {
@@ -202,23 +194,12 @@ app.controller('signin', function ($scope, $http, $state) {
         }
         $http.post(url + "auth/login/", data, { withCredentials: true }).then(function (response) {
             var data = response.data
-            if ((data.role == "Receptionist") || (data.role=="Doctor")) {
+            if ((data.role == "Receptionist") || (data.role == "Doctor")) {
                 $state.go('appointment')
             }
-            else if(data.role == "Patient") {
+            else if (data.role == "Patient") {
                 $state.go('/')
             }
-            Swal.fire({
-                title: "Success",
-                icon: "success",
-                text: response.data.msg
-            })
-        }).catch(function (error) {
-            Swal.fire({
-                title: "Error",
-                icon: "error",
-                text: error.data.error
-            })
         })
     }
     $scope.input_type = 'password'
@@ -248,17 +229,6 @@ app.controller('home', function ($scope, $http, $state) {
             if (result.isConfirmed) {
                 $http.delete(url + "auth/logout/").then(function (response) {
                     $state.go("signin")
-                    Swal.fire({
-                        title: "Success",
-                        icon: "success",
-                        text: response.data.msg
-                    })
-                }).catch(function (error) {
-                    Swal.fire({
-                        title: "Error",
-                        icon: "error",
-                        text: error.data.error
-                    })
                 })
             }
         })
@@ -297,12 +267,6 @@ app.controller('home', function ($scope, $http, $state) {
     $http.get(url + "patient/doctors/").then(function (response) {
         var doc = response.data
         $scope.doctors = doc
-    }).catch(function (error) {
-        Swal.fire({
-            title: "Error",
-            icon: "error",
-            text: error.data.error
-        })
     })
     $scope.submit = function () {
         var date = $scope.dob.toLocaleDateString("sv-sv")
@@ -315,17 +279,6 @@ app.controller('home', function ($scope, $http, $state) {
         }
         $http.post(url + "patient/book_appointment/", detail, { withCredentials: true }).then(function (response) {
             document.getElementById("Appointment").reset()
-            Swal.fire({
-                title: "Success",
-                icon: "success",
-                text: response.data.msg
-            })
-        }).catch(function (error) {
-            Swal.fire({
-                title: "Error",
-                icon: "error",
-                text: error.data.error || "An unknown error occurred."
-            })
         })
     }
     $scope.clear = function () {
@@ -338,6 +291,7 @@ app.controller('medical', function ($scope, $http, $state) {
     $http.get(url + "patient/book_appointment/").then(function (response) {
         var data = response.data
         $scope.appointments = data
+        console.log(data)
     })
     $scope.logout = function () {
         Swal.fire({
@@ -355,23 +309,14 @@ app.controller('medical', function ($scope, $http, $state) {
             if (result.isConfirmed) {
                 $http.delete(url + "auth/logout/").then(function (response) {
                     $state.go("signin")
-                    Swal.fire({
-                        title: "Success",
-                        icon: "success",
-                        text: response.data.msg
-                    })
-                }).catch(function (error) {
-                    Swal.fire({
-                        title: "Error",
-                        icon: "error",
-                        text: error.data.error
-                    })
                 })
             }
         })
     }
 })
+
 app.controller('appointmen', function ($scope, $http, $state) {
+    $scope.valid = false
     $scope.logout = function () {
         Swal.fire({
             title: 'Do you want to logout ?',
@@ -388,74 +333,51 @@ app.controller('appointmen', function ($scope, $http, $state) {
             if (result.isConfirmed) {
                 $http.delete(url + "auth/logout/").then(function (response) {
                     $state.go("signin")
-                    Swal.fire({
-                        title: "Success",
-                        icon: "success",
-                        text: response.data.msg
-                    })
-                }).catch(function (error) {
-                    Swal.fire({
-                        title: "Error",
-                        icon: "error",
-                        text: error.data.error
-                    })
                 })
             }
         })
     }
     $http.get(url + "auth/profile/").then(function (response) {
         var profile = response.data.role
-        $scope.user=profile
+        $scope.user = profile
         console.log(profile)
     })
+    $scope.consult = function (id) {
+        var pre = document.getElementById("pre").value
+        var consult = {
+            id: id,
+            prescription: pre
+        }
+        $http.post(url + "doctor/prescription/", consult).then(function (response) {
+            show();
+        })
+    }
     $scope.appointments = []
     function show() {
         $http.get(url + "reception/appointments_data/").then(function (response) {
             var data = response.data
-            var appointment=data.appointment_data
-            $scope.appointments=appointment
+            var appointment = data.appointment_data
+            $scope.appointments = appointment
         })
     }
     $scope.approve = function (id) {
         var value = {
-            id:id,
+            id: id,
             accepted: true
         }
         $http.put(url + "reception/update_appointment", value).then(function (response) {
-            Swal.fire({
-                title: "Success",
-                icon: "success",
-                text: response.data.msg
-            })
             show()
-        }).catch(function (error) {
-            Swal.fire({
-                title: "Error",
-                icon: "error",
-                text: error.data.error || "An unknown error occurred."
-            })
         })
     }
-    $scope.reject=function(id){
-        var reason=document.getElementById("reason").value
+    $scope.reject = function (id) {
+        var reason = document.getElementById("reason").value
         var value = {
             accepted: false,
-            reason_for_cancel:reason
+            reason_for_cancel: reason
         }
         $http.put(url + "reception/update_appointment", value, { params: { 'id': id } }).then(function (response) {
-            Swal.fire({
-                title: "Success",
-                icon: "success",
-                text: response.data.msg
-            })
             document.getElementById("rejectModal").reset()
             show()
-        }).catch(function (error) {
-            Swal.fire({
-                title: "Error",
-                icon: "error",
-                text: error.data.error || "An unknown error occurred."
-            })
         })
     }
     $scope.clear = function () {
@@ -463,7 +385,13 @@ app.controller('appointmen', function ($scope, $http, $state) {
     }
     show()
 })
+
 app.controller('profile', function ($scope, $http, $state) {
+    $http.get(url + "auth/profile/").then(function (response) {
+        var profile = response.data.role
+        $scope.user = profile
+        console.log(profile)
+    })
     $http.get(url + "auth/profile/").then(function (response) {
         var profile = response.data
         $scope.address = profile.address
@@ -497,17 +425,6 @@ app.controller('profile', function ($scope, $http, $state) {
             if (result.isConfirmed) {
                 $http.delete(url + "auth/logout/").then(function (response) {
                     $state.go("signin")
-                    Swal.fire({
-                        title: "Success",
-                        icon: "success",
-                        text: response.data.msg
-                    })
-                }).catch(function (error) {
-                    Swal.fire({
-                        title: "Error",
-                        icon: "error",
-                        text: error.data.error
-                    })
                 })
             }
         })

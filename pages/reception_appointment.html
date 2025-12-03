@@ -54,13 +54,42 @@
                             class="badge bg-warning text-white">{{appointment.status}}</span>
                         <span ng-if="appointment.status === 'Accepted by receptionist' && user != 'Doctor'"
                             class="badge bg-success text-white">{{appointment.status}}</span>
-                        <span ng-if="appointment.status === 'Accepted by receptionist' && user == 'Doctor' "
+                        <span ng-if="appointment.status === 'Accepted by receptionist' && user == 'Doctor'"
                             class="badge bg-primary text-white">{{appointment.status}}</span>
-                        <span ng-if="appointment.status === 'Accepted by doctor' && user == 'Doctor' "
+                        <span ng-if="appointment.status === 'Accepted by doctor' && user == 'Doctor'"
+                            class="badge bg-success text-white">{{appointment.status}}</span>
+                        <span ng-if="appointment.status === 'Consulted'"
                             class="badge bg-success text-white">{{appointment.status}}</span>
                     </td>
                     <td>
-                        <div ng-if="appointment.status === 'Pending' || (user == 'Doctor' && appointment.status === 'Accepted by receptionist')" class="d-flex gap-2">
+                        <div ng-if="(user == 'Doctor' && appointment.status === 'Accepted by doctor')"
+                            class="d-flex gap-2">
+                            <button data-bs-toggle="modal" data-bs-target="#acceptModal"
+                                ng-if="appointment.status === 'Accepted by doctor'"
+                                class="btn-primary fw-semibold btn-small btn" type="submit">Consult</button>
+                            <div class="modal fade" id="acceptModal" tabindex="-1" aria-labelledby="reject"
+                                data-bs-backdrop="static" data-bs-keyboard="false">
+                                <div class="modal-dialog modal-md">
+                                    <div class="modal-content">
+                                        <div class="modal-header text-dark">
+                                            <h5 class="modal-title">Prescription</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <textarea type="text" placeholder="Explain reason" required
+                                                class="form-control" id="pre" pattern="[A-Za-z_ ]{1,50}"></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                                ng-click="clear()">Close</button>
+                                            <button type="submit" class="btn btn-primary"
+                                                ng-click="consult(appointment.id)">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-if="appointment.status === 'Pending' || (user == 'Doctor' && appointment.status === 'Accepted by receptionist')"
+                            class="d-flex gap-2">
                             <button ng-click="approve(appointment.id)" class="btn btn-success fw-semibold btn-sm"
                                 type="button">Approve</button>
                             <button type="button" class="btn btn-danger fw-semibold btn-sm" data-bs-toggle="modal"

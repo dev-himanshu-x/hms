@@ -35,6 +35,7 @@
                     <th scope="col">Reason</th>
                     <th scope="col">Status</th>
                     <th scope="col">Fee</th>
+                    <th scope="col">Prescription</th>
                 </tr>
             </thead>
             <tbody>
@@ -46,9 +47,13 @@
                     <td>{{appointment.reason_to_vist}}</td>
                     <td>{{appointment.status}}</td>
                     <td>$ 200{{appointment.fees}}</td>
+                    <td><span ng-if="appointment.status === 'Consulted'"
+                            class="badge bg-primary text-white" ng-click="down(appointment.id)">Download</span>
+                        <span ng-if="appointment.status != 'Consulted'">-</span>
+                    </td>
                 </tr>
                 <tr ng-if="appointments.length === 0">
-                    <td  class="text-center text-muted">No appointments to display.</td>
+                    <td class="text-center text-muted">No appointments to display.</td>
                 </tr>
             </tbody>
         </table>
